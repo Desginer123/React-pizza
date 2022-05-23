@@ -11,7 +11,7 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [categoryId, setCategoryId] = useState(0);
   const [sortType, setSortType] = useState({
-    name: "популярности",
+    name: "популярности (DESC)",
     sortProperty: "rating",
   });
   useEffect(() => {
