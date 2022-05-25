@@ -7,9 +7,9 @@ import PizzaBlock from "../components/pizzaBlock/PizzaBlock";
 import Skeleton from "../components/pizzaBlock/Skeleton";
 import Pagination from "../components/Pagination";
 import { setCategoryId } from "../redux/slices/filterSlice";
-import { SearchContext } from "../App";
 const Home = () => {
-  const { searchValue } = React.useContext(SearchContext);
+  const { searchValue } = useSelector((state) => state.search);
+
   const { categoryId, sort } = useSelector((state) => state.filter);
   const sortType = sort.sortProperty;
 
@@ -32,8 +32,6 @@ const Home = () => {
       `https://628b3a5f7886bbbb37b32850.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}&${search}`
     )
       .then((res) => {
-        console.log("res.json");
-
         return res.json();
       })
       .then((json) => {
