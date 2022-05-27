@@ -7,6 +7,7 @@ import Skeleton from "../components/pizzaBlock/Skeleton";
 import Pagination from "../components/Pagination";
 import { fetchPizzas } from "../redux/slices/pizzasSlice";
 import { setCategoryId } from "../redux/slices/filterSlice";
+import PizzaError from "../components/pizzaBlock/PizzaError";
 const Home = () => {
   const { searchValue } = useSelector((state) => state.search);
   const categories = ["Все", "Мясные", "Вегетарианские", "Гриль", "Острые"];
@@ -54,12 +55,7 @@ const Home = () => {
         <Sort />
       </div>
       {status === "error" ? (
-        <div className="container">
-          <h2>
-            Произошла ошибка <icon>😕</icon>
-          </h2>
-          <p>К сожалению не удалось получить пиццы</p>
-        </div>
+        <PizzaError />
       ) : (
         <>
           <h2 className="content__title">{categories[categoryId]} пиццы</h2>
