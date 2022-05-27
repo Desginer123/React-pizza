@@ -20,6 +20,17 @@ body {
   }
 }
 
+.pizza-detail {
+  display: flex;
+  justify-content: space-between;
+  h3 {
+    display: flex;
+    p {
+      margin-left: 15px;
+    }
+  }
+}
+
 .content {
   padding: 40px 0;
   @media (max-width: 340px) {

@@ -8,11 +8,12 @@ import Pagination from "../components/Pagination";
 import { fetchPizzas } from "../redux/slices/pizzasSlice";
 import { setCategoryId } from "../redux/slices/filterSlice";
 import PizzaError from "../components/pizzaBlock/PizzaError";
+import { pizzaDataSelector } from "../redux/slices/pizzasSlice";
 const Home = () => {
   const { searchValue } = useSelector((state) => state.search);
   const categories = ["Все", "Мясные", "Вегетарианские", "Гриль", "Острые"];
   const { categoryId, sort } = useSelector((state) => state.filter);
-  const { items, status } = useSelector((state) => state.pizzas);
+  const { items, status } = useSelector(pizzaDataSelector);
 
   const sortType = sort.sortProperty;
 
@@ -43,7 +44,7 @@ const Home = () => {
   const pizzas = items.map((item) => {
     return <PizzaBlock key={item.id} {...item} />;
   });
-  const skeletons = [...new Array(6)].map((_, i) => <Skeleton key={i} />);
+  const skeletons = [...new Array(4)].map((_, i) => <Skeleton key={i} />);
 
   return (
     <div className="container">
