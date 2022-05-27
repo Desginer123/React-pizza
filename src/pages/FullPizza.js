@@ -25,7 +25,11 @@ const FullPizza = () => {
   }, []);
 
   if (!pizza) {
-    return "загрузка...";
+    return (
+      <div className="container pizza-detail">
+        <h2>Загрузка</h2>
+      </div>
+    );
   }
 
   return (
