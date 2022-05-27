@@ -1,43 +1,41 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Categories from "../components/Categories";
 import Sort from "../components/Sort";
 import PizzaBlock from "../components/pizzaBlock/PizzaBlock";
 import Skeleton from "../components/pizzaBlock/Skeleton";
 import Pagination from "../components/Pagination";
+import { fetchPizzas } from "../redux/slices/pizzasSlice";
 import { setCategoryId } from "../redux/slices/filterSlice";
 const Home = () => {
   const { searchValue } = useSelector((state) => state.search);
-
+  const categories = ["Все", "Мясные", "Вегетарианские", "Гриль", "Острые"];
   const { categoryId, sort } = useSelector((state) => state.filter);
+  const { items, status } = useSelector((state) => state.pizzas);
+
   const sortType = sort.sortProperty;
 
   const dispatch = useDispatch();
-  const [items, setItems] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const onChangeCategory = (id) => {
     dispatch(setCategoryId(id));
   };
-  useEffect(() => {
-    setIsLoading(true);
 
+  useEffect(() => {
     const order = sortType.includes("-") ? "asc" : "desc";
     const sortBy = sortType.replace("-", "");
     const category = categoryId > 0 ? `category=${categoryId}` : "";
     const search = searchValue ? `search=${searchValue}` : " ";
-
-    fetch(
-      `https://628b3a5f7886bbbb37b32850.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}&${search}`
-    )
-      .then((res) => {
-        return res.json();
+    dispatch(
+      fetchPizzas({
+        sortBy,
+        order,
+        category,
+        search,
+        currentPage,
       })
-      .then((json) => {
-        setItems(json);
-        setIsLoading(false);
-      });
+    );
+
     window.scrollTo(0, 0);
   }, [categoryId, sortType, searchValue, currentPage]);
 
@@ -55,8 +53,23 @@ const Home = () => {
         />
         <Sort />
       </div>
-      <h2 className="content__title">Все пиццы</h2>
-      <div className="content__items">{isLoading ? skeletons : pizzas}</div>
+      {status === "error" ? (
+        <div className="container">
+          <h2>
+            Произошла ошибка <icon>😕</icon>
+          </h2>
+          <p>К сожалению не удалось получить пиццы</p>
+        </div>
+      ) : (
+        <>
+          <h2 className="content__title">{categories[categoryId]} пиццы</h2>
+
+          <div className="content__items">
+            {status === "loading" ? skeletons : pizzas}
+          </div>
+        </>
+      )}
+
       <Pagination onChangePage={(number) => setCurrentPage(number)} />
     </div>
   );
